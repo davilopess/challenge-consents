@@ -8,6 +8,9 @@ import com.davi.challenge.consents.infraestructure.mapper.ConsentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 public class ConsentRepositoryImpl implements ConsentRepository {
@@ -18,5 +21,10 @@ public class ConsentRepositoryImpl implements ConsentRepository {
     public Consent save(Consent consent) {
         ConsentDocument consentDocument = consentMapper.toDocument(consent);
         return consentMapper.toDomain(repository.save(consentDocument));
+    }
+
+    @Override
+    public Optional<Consent> findById(UUID id) {
+        return repository.findById(id).map(consentMapper::toDomain);
     }
 }

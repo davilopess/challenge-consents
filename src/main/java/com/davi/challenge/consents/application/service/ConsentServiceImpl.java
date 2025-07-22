@@ -26,4 +26,10 @@ class ConsentServiceImpl implements ConsentService {
         consent.setCreationDateTime(LocalDateTime.now());
         return consentMapper.toDTO(consentRepository.save(consent));
     }
+
+    @Override
+    public ConsentResponseDTO getConsentById(UUID id) {
+        Consent consent = consentRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
+        return consentMapper.toDTO(consent);
+    }
 }
