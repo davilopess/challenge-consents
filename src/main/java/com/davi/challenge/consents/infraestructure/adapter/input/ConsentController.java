@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +66,18 @@ public class ConsentController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<ConsentResponseDTO> getConsentById(@PathVariable("id") UUID id){
         return ResponseEntity.ok(consentService.getConsentById(id));
+    }
+
+    @Operation(summary = "Get all consents ", description = "Get all consents by page")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consent retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = ConsentResponseDTO.class)))
+    })
+    @GetMapping
+    public ResponseEntity<Page<ConsentResponseDTO>> getAllConsents(@RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "5") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(consentService.getAllConsents(pageable));
     }
 
     @Operation(summary = "Revoke consent by id", description = "Revoke")

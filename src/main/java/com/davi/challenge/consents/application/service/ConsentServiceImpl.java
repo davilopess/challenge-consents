@@ -9,6 +9,8 @@ import com.davi.challenge.consents.infraestructure.dto.request.UpdateConsentRequ
 import com.davi.challenge.consents.infraestructure.dto.response.ConsentResponseDTO;
 import com.davi.challenge.consents.infraestructure.mapper.ConsentMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -43,6 +45,11 @@ class ConsentServiceImpl implements ConsentService {
     public ConsentResponseDTO getConsentById(UUID id) {
         Consent consent = consentRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
         return consentMapper.toDTO(consent);
+    }
+
+    @Override
+    public Page<ConsentResponseDTO> getAllConsents(Pageable pageable) {
+        return consentRepository.findAll(pageable).map(consentMapper::toDTO);
     }
 
     @Override

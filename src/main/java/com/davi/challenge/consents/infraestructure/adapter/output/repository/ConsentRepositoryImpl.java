@@ -6,6 +6,8 @@ import com.davi.challenge.consents.infraestructure.adapter.output.repository.per
 import com.davi.challenge.consents.infraestructure.document.ConsentDocument;
 import com.davi.challenge.consents.infraestructure.mapper.ConsentMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -26,5 +28,10 @@ public class ConsentRepositoryImpl implements ConsentRepository {
     @Override
     public Optional<Consent> findById(UUID id) {
         return repository.findById(id).map(consentMapper::toDomain);
+    }
+
+    @Override
+    public Page<Consent> findAll(Pageable pageable) {
+        return repository.findAll(pageable).map(consentMapper::toDomain);
     }
 }
