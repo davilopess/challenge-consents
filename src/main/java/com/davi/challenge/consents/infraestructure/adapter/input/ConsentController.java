@@ -2,6 +2,7 @@ package com.davi.challenge.consents.infraestructure.adapter.input;
 
 import com.davi.challenge.consents.application.port.input.ConsentService;
 import com.davi.challenge.consents.infraestructure.dto.request.CreateConsentRequestDTO;
+import com.davi.challenge.consents.infraestructure.dto.request.UpdateConsentRequestDTO;
 import com.davi.challenge.consents.infraestructure.dto.response.ConsentResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,6 +36,21 @@ public class ConsentController {
     @PostMapping
     public ResponseEntity<ConsentResponseDTO> createConsent(@RequestBody @Valid CreateConsentRequestDTO createConsentRequestDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(consentService.createConsent(createConsentRequestDTO));
+    }
+
+    @Operation(summary = "Update a consent", description = "Update a existing consent with new values")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consent updated successfully",
+                    content = @Content(schema = @Schema(implementation = ConsentResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request data",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Consent not found",
+                    content = @Content(schema = @Schema()))
+    })
+    @PostMapping(value = "/{id}")
+    public ResponseEntity<ConsentResponseDTO> updateConsent(@PathVariable("id") UUID id,
+                                                            @RequestBody @Valid UpdateConsentRequestDTO updateConsentRequestDTO){
+        return ResponseEntity.ok(consentService.updateConsent(id, updateConsentRequestDTO));
     }
 
     @Operation(summary = "Get consent by id", description = "Retrieve consent's details using their id")

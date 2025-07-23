@@ -4,6 +4,7 @@ import com.davi.challenge.consents.application.port.input.ConsentService;
 import com.davi.challenge.consents.application.port.output.ConsentRepository;
 import com.davi.challenge.consents.domain.entity.Consent;
 import com.davi.challenge.consents.infraestructure.dto.request.CreateConsentRequestDTO;
+import com.davi.challenge.consents.infraestructure.dto.request.UpdateConsentRequestDTO;
 import com.davi.challenge.consents.infraestructure.dto.response.ConsentResponseDTO;
 import com.davi.challenge.consents.infraestructure.mapper.ConsentMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,16 @@ class ConsentServiceImpl implements ConsentService {
         consent.defineStatus();
         consent.setCreationDateTime(LocalDateTime.now());
         return consentMapper.toDTO(consentRepository.save(consent));
+    }
+
+    @Override
+    public ConsentResponseDTO updateConsent(UUID id, UpdateConsentRequestDTO updateConsentRequestDTO) {
+        Consent existingConsent = consentRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
+        existingConsent.setCpf(updateConsentRequestDTO.cpf());
+        existingConsent.setExpirationDateTime(updateConsentRequestDTO.expirationDateTime());
+        existingConsent.setAdditionalInfo(updateConsentRequestDTO.additionalInfo());
+        existingConsent.defineStatus();
+        return consentMapper.toDTO(consentRepository.save(existingConsent));
     }
 
     @Override
