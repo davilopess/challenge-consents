@@ -3,6 +3,7 @@ package com.davi.challenge.consents.application.service;
 import com.davi.challenge.consents.application.port.input.ConsentService;
 import com.davi.challenge.consents.application.port.output.ConsentRepository;
 import com.davi.challenge.consents.domain.entity.Consent;
+import com.davi.challenge.consents.domain.enums.ConsentStatusEnum;
 import com.davi.challenge.consents.infraestructure.dto.request.CreateConsentRequestDTO;
 import com.davi.challenge.consents.infraestructure.dto.request.UpdateConsentRequestDTO;
 import com.davi.challenge.consents.infraestructure.dto.response.ConsentResponseDTO;
@@ -43,4 +44,12 @@ class ConsentServiceImpl implements ConsentService {
         Consent consent = consentRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
         return consentMapper.toDTO(consent);
     }
+
+    @Override
+    public void revokeConsent(UUID id) {
+        Consent consent = consentRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
+        consent.setStatus(ConsentStatusEnum.REVOKED);
+        consentRepository.save(consent);
+    }
+
 }

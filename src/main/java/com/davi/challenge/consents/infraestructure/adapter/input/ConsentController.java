@@ -64,4 +64,17 @@ public class ConsentController {
     public ResponseEntity<ConsentResponseDTO> getConsentById(@PathVariable("id") UUID id){
         return ResponseEntity.ok(consentService.getConsentById(id));
     }
+
+    @Operation(summary = "Revoke consent by id", description = "Revoke")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consent revoked successfully",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "404", description = "Consent not found",
+                    content = @Content(schema = @Schema()))
+    })
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> revokeConsent(@PathVariable("id") UUID id){
+        consentService.revokeConsent(id);
+        return ResponseEntity.ok("Consent revoked successfully");
+    }
 }

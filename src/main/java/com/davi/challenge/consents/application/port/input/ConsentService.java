@@ -13,4 +13,6 @@ public interface ConsentService {
     ConsentResponseDTO updateConsent(UUID id, UpdateConsentRequestDTO updateConsentRequestDTO);
 
     ConsentResponseDTO getConsentById(UUID id);
+
+    void revokeConsent(UUID id);
 }
