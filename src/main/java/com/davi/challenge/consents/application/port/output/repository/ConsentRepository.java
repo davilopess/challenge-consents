@@ -1,4 +1,4 @@
-package com.davi.challenge.consents.application.port.output;
+package com.davi.challenge.consents.application.port.output.repository;
 
 import com.davi.challenge.consents.domain.entity.Consent;
 import org.springframework.data.domain.Page;

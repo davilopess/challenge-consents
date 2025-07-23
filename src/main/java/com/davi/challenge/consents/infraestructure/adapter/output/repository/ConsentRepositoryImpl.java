@@ -1,6 +1,6 @@
 package com.davi.challenge.consents.infraestructure.adapter.output.repository;
 
-import com.davi.challenge.consents.application.port.output.ConsentRepository;
+import com.davi.challenge.consents.application.port.output.repository.ConsentRepository;
 import com.davi.challenge.consents.domain.entity.Consent;
 import com.davi.challenge.consents.infraestructure.adapter.output.repository.persistence.ConsentDocumentRepository;
 import com.davi.challenge.consents.infraestructure.document.ConsentDocument;

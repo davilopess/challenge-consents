@@ -1,7 +1,8 @@
 package com.davi.challenge.consents.application.service;
 
 import com.davi.challenge.consents.application.port.input.ConsentService;
-import com.davi.challenge.consents.application.port.output.ConsentRepository;
+import com.davi.challenge.consents.application.port.output.client.AdditionalInfoExternalClient;
+import com.davi.challenge.consents.application.port.output.repository.ConsentRepository;
 import com.davi.challenge.consents.domain.entity.Consent;
 import com.davi.challenge.consents.domain.enums.ConsentStatusEnum;
 import com.davi.challenge.consents.infraestructure.dto.request.CreateConsentRequestDTO;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -21,6 +23,7 @@ import java.util.UUID;
 class ConsentServiceImpl implements ConsentService {
     private final ConsentRepository consentRepository;
     private final ConsentMapper consentMapper;
+    private final AdditionalInfoExternalClient additionalInfoExternalClient;
 
     @Override
     public ConsentResponseDTO createConsent(CreateConsentRequestDTO createConsentRequestDTO) {
@@ -28,6 +31,7 @@ class ConsentServiceImpl implements ConsentService {
         consent.setId(UUID.randomUUID());
         consent.defineStatus();
         consent.setCreationDateTime(LocalDateTime.now());
+        if(Objects.isNull(consent.getAdditionalInfo())) consent.setAdditionalInfo(additionalInfoExternalClient.getAdditionalInfo());
         return consentMapper.toDTO(consentRepository.save(consent));
     }
 

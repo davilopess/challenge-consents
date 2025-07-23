@@ -50,7 +50,7 @@ public class ConsentController {
             @ApiResponse(responseCode = "404", description = "Consent not found",
                     content = @Content(schema = @Schema()))
     })
-    @PostMapping(value = "/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<ConsentResponseDTO> updateConsent(@PathVariable("id") UUID id,
                                                             @RequestBody @Valid UpdateConsentRequestDTO updateConsentRequestDTO){
         return ResponseEntity.ok(consentService.updateConsent(id, updateConsentRequestDTO));
