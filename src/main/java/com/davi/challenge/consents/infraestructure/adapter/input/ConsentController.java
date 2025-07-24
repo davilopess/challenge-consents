@@ -34,6 +34,10 @@ public class ConsentController {
             @ApiResponse(responseCode = "201", description = "Consent created successfully",
                     content = @Content(schema = @Schema(implementation = ConsentResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid request data",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "424", description = "Failed to fetch additional information.",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "An unexpected error occurred.",
                     content = @Content(schema = @Schema()))
     })
     @PostMapping
@@ -48,6 +52,8 @@ public class ConsentController {
             @ApiResponse(responseCode = "400", description = "Invalid request data",
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Consent not found",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "An unexpected error occurred.",
                     content = @Content(schema = @Schema()))
     })
     @PutMapping(value = "/{id}")
@@ -61,6 +67,8 @@ public class ConsentController {
             @ApiResponse(responseCode = "200", description = "Consent found",
                     content = @Content(schema = @Schema(implementation = ConsentResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Consent not found",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "An unexpected error occurred.",
                     content = @Content(schema = @Schema()))
     })
     @GetMapping(value = "/{id}")
@@ -71,7 +79,9 @@ public class ConsentController {
     @Operation(summary = "Get all consents ", description = "Get all consents by page")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consent retrieved successfully",
-                    content = @Content(schema = @Schema(implementation = ConsentResponseDTO.class)))
+                    content = @Content(schema = @Schema(implementation = ConsentResponseDTO.class))),
+            @ApiResponse(responseCode = "500", description = "An unexpected error occurred.",
+                    content = @Content(schema = @Schema()))
     })
     @GetMapping
     public ResponseEntity<Page<ConsentResponseDTO>> getAllConsents(@RequestParam(defaultValue = "0") int page,
@@ -85,6 +95,8 @@ public class ConsentController {
             @ApiResponse(responseCode = "200", description = "Consent revoked successfully",
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "404", description = "Consent not found",
+                    content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "An unexpected error occurred.",
                     content = @Content(schema = @Schema()))
     })
     @DeleteMapping(value = "/{id}")

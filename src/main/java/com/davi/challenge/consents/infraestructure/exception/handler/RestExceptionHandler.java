@@ -1,5 +1,6 @@
 package com.davi.challenge.consents.infraestructure.exception.handler;
 
+import com.davi.challenge.consents.infraestructure.exception.AdditionalInfoIntegrationException;
 import com.davi.challenge.consents.infraestructure.exception.ConsentNotFoundException;
 import com.davi.challenge.consents.infraestructure.exception.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,18 @@ import java.util.List;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
+
+    @ExceptionHandler(AdditionalInfoIntegrationException.class)
+    public ResponseEntity<ErrorResponse> additionalInfoIntegrationException(RuntimeException ex) {
+        ErrorResponse errorResponse = ErrorResponse
+                .builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.FAILED_DEPENDENCY.value())
+                .status(HttpStatus.FAILED_DEPENDENCY.name())
+                .errors(List.of(ex.getMessage()))
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.FAILED_DEPENDENCY);
+    }
 
     @ExceptionHandler(ConsentNotFoundException.class)
     public ResponseEntity<ErrorResponse> consentNotFoundException(RuntimeException ex) {
@@ -33,7 +46,7 @@ public class RestExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                .errors(List.of(ex.getMessage()))
+                .errors(List.of("An unexpected error occurred."))
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

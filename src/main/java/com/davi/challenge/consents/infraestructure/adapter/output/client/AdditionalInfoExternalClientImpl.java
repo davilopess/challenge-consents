@@ -2,6 +2,7 @@ package com.davi.challenge.consents.infraestructure.adapter.output.client;
 
 import com.davi.challenge.consents.application.port.output.client.AdditionalInfoExternalClient;
 import com.davi.challenge.consents.infraestructure.config.ChallenngeConsentProperties;
+import com.davi.challenge.consents.infraestructure.exception.AdditionalInfoIntegrationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -16,9 +17,13 @@ public class AdditionalInfoExternalClientImpl implements AdditionalInfoExternalC
     public String getAdditionalInfo() {
         RestTemplate restTemplate = new RestTemplate();
 
-        return restTemplate.getForObject(
-                properties.getAdditionalInfoIntegratorUrl(),
-                String.class
-        );
+        try{
+            return restTemplate.getForObject(
+                    properties.getAdditionalInfoIntegratorUrl(),
+                    String.class
+            );
+        }catch (Exception e){
+            throw new AdditionalInfoIntegrationException();
+        }
     }
 }
