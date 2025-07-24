@@ -29,7 +29,6 @@ DDD e Hexagonal
 - Java 21
 - Spring Boot
 
-### Abordagem Arquitetural
 ## Swagger
 
 http://localhost:8080/swagger-ui/index.html
