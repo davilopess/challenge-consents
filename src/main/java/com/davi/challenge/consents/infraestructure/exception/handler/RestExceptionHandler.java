@@ -51,6 +51,18 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> illegalArgumentException(IllegalArgumentException ex) {
+        ErrorResponse errorResponse = ErrorResponse
+                .builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.name())
+                .errors(List.of(ex.getMessage()))
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> argumentNotValidException(MethodArgumentNotValidException ex) {
         List<String> errorList = ex.getBindingResult()

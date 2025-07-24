@@ -29,4 +29,11 @@ public class Consent {
         return status != null
                 && status.equals(ConsentStatusEnum.REVOKED);
     }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        if (additionalInfo != null && (additionalInfo.isEmpty() || additionalInfo.length() > 50)) {
+            throw new IllegalArgumentException("Additional info must have between 1 and 50 characters when present");
+        }
+        this.additionalInfo = additionalInfo;
+    }
 }
