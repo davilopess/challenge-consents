@@ -271,6 +271,39 @@ class ConsentControllerIntegrationTest {
         }
     }
 
+    @Nested
+    @DisplayName("DELETE /consents/{id} - Revoke Consent Tests")
+    class RevokeConsentTests {
+
+        @Test
+        @DisplayName("Should revoke consent successfully")
+        void shouldRevokeConsentSuccessfully() {
+            UUID consentId = createTestConsent("57311804078");
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    baseUrl + "/" + consentId, HttpMethod.DELETE, null, String.class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(response.getBody()).isEqualTo("Consent revoked successfully");
+
+            ResponseEntity<ConsentResponseDTO> getResponse = restTemplate.getForEntity(
+                    baseUrl + "/" + consentId, ConsentResponseDTO.class);
+            
+            assertThat(getResponse.getBody().status()).isEqualTo(ConsentStatusEnum.REVOKED);
+        }
+
+        @Test
+        @DisplayName("Should return 404 when revoking non-existent consent")
+        void shouldReturn404WhenRevokingNonExistentConsent() {
+            UUID nonExistentId = UUID.randomUUID();
+
+            ResponseEntity<ErrorResponse> response = restTemplate.exchange(
+                    baseUrl + "/" + nonExistentId, HttpMethod.DELETE, null, ErrorResponse.class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+    }
+
     private UUID createTestConsent(String cpf) {
         CreateConsentRequestDTO request = CreateConsentRequestDTO.builder()
                 .cpf(cpf)
