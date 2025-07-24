@@ -24,4 +24,9 @@ public class Consent {
 
         this.status = ConsentStatusEnum.ACTIVE;
     }
+
+    public boolean isRevoked(){
+        return status != null
+                && status.equals(ConsentStatusEnum.REVOKED);
+    }
 }

@@ -1,5 +1,6 @@
 package com.davi.challenge.consents.application.service;
 
+import com.davi.challenge.consents.application.port.input.ConsentAuditService;
 import com.davi.challenge.consents.application.port.input.ConsentService;
 import com.davi.challenge.consents.application.port.output.client.AdditionalInfoExternalClient;
 import com.davi.challenge.consents.application.port.output.repository.ConsentRepository;
@@ -24,6 +25,7 @@ class ConsentServiceImpl implements ConsentService {
     private final ConsentRepository consentRepository;
     private final ConsentMapper consentMapper;
     private final AdditionalInfoExternalClient additionalInfoExternalClient;
+    private final ConsentAuditService consentAuditService;
 
     @Override
     public ConsentResponseDTO createConsent(CreateConsentRequestDTO createConsentRequestDTO) {
@@ -42,7 +44,11 @@ class ConsentServiceImpl implements ConsentService {
         existingConsent.setExpirationDateTime(updateConsentRequestDTO.expirationDateTime());
         existingConsent.setAdditionalInfo(updateConsentRequestDTO.additionalInfo());
         existingConsent.defineStatus();
-        return consentMapper.toDTO(consentRepository.save(existingConsent));
+
+        Consent existingConsentUpdated = consentRepository.save(existingConsent);
+        consentAuditService.registerAudit(existingConsentUpdated);
+
+        return consentMapper.toDTO(existingConsentUpdated);
     }
 
     @Override
@@ -61,6 +67,8 @@ class ConsentServiceImpl implements ConsentService {
         Consent consent = consentRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
         consent.setStatus(ConsentStatusEnum.REVOKED);
         consentRepository.save(consent);
+
+        consentAuditService.registerAudit(consent);
     }
 
 }
