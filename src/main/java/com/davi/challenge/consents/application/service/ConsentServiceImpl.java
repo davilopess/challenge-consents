@@ -9,6 +9,7 @@ import com.davi.challenge.consents.domain.enums.ConsentStatusEnum;
 import com.davi.challenge.consents.infraestructure.dto.request.CreateConsentRequestDTO;
 import com.davi.challenge.consents.infraestructure.dto.request.UpdateConsentRequestDTO;
 import com.davi.challenge.consents.infraestructure.dto.response.ConsentResponseDTO;
+import com.davi.challenge.consents.infraestructure.exception.ConsentNotFoundException;
 import com.davi.challenge.consents.infraestructure.mapper.ConsentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,7 +40,7 @@ class ConsentServiceImpl implements ConsentService {
 
     @Override
     public ConsentResponseDTO updateConsent(UUID id, UpdateConsentRequestDTO updateConsentRequestDTO) {
-        Consent existingConsent = consentRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
+        Consent existingConsent = consentRepository.findById(id).orElseThrow(ConsentNotFoundException::new);
         existingConsent.setCpf(updateConsentRequestDTO.cpf());
         existingConsent.setExpirationDateTime(updateConsentRequestDTO.expirationDateTime());
         existingConsent.setAdditionalInfo(updateConsentRequestDTO.additionalInfo());
@@ -53,7 +54,7 @@ class ConsentServiceImpl implements ConsentService {
 
     @Override
     public ConsentResponseDTO getConsentById(UUID id) {
-        Consent consent = consentRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
+        Consent consent = consentRepository.findById(id).orElseThrow(ConsentNotFoundException::new);
         return consentMapper.toDTO(consent);
     }
 
@@ -64,7 +65,7 @@ class ConsentServiceImpl implements ConsentService {
 
     @Override
     public void revokeConsent(UUID id) {
-        Consent consent = consentRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
+        Consent consent = consentRepository.findById(id).orElseThrow(ConsentNotFoundException::new);
         consent.setStatus(ConsentStatusEnum.REVOKED);
         consentRepository.save(consent);
 
