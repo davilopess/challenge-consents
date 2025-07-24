@@ -2,6 +2,7 @@ package com.davi.challenge.consents.infraestructure.adapter.input;
 
 import com.davi.challenge.consents.domain.enums.ConsentStatusEnum;
 import com.davi.challenge.consents.infraestructure.dto.request.CreateConsentRequestDTO;
+import com.davi.challenge.consents.infraestructure.dto.request.UpdateConsentRequestDTO;
 import com.davi.challenge.consents.infraestructure.dto.response.ConsentResponseDTO;
 import com.davi.challenge.consents.infraestructure.exception.model.ErrorResponse;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -198,6 +199,75 @@ class ConsentControllerIntegrationTest {
             } catch (Exception e) {
                 fail("Failed to parse JSON response", e);
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("PUT /consents/{id} - Update Consent Tests")
+    class UpdateConsentTests {
+
+        @Test
+        @DisplayName("Should update consent successfully")
+        void shouldUpdateConsentSuccessfully() {
+            UUID consentId = createTestConsent("57144193082");
+
+            UpdateConsentRequestDTO updateRequest = UpdateConsentRequestDTO.builder()
+                    .cpf("57144193082")
+                    .expirationDateTime(LocalDateTime.now().plusDays(60))
+                    .additionalInfo("Updated additional info")
+                    .build();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<UpdateConsentRequestDTO> entity = new HttpEntity<>(updateRequest, headers);
+
+            ResponseEntity<ConsentResponseDTO> response = restTemplate.exchange(
+                    baseUrl + "/" + consentId, HttpMethod.PUT, entity, ConsentResponseDTO.class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(response.getBody()).isNotNull();
+            assertThat(response.getBody().id()).isEqualTo(consentId);
+            assertThat(response.getBody().additionalInfo()).isEqualTo("Updated additional info");
+        }
+
+        @Test
+        @DisplayName("Should return 404 when updating non-existent consent")
+        void shouldReturn404WhenUpdatingNonExistentConsent() {
+            UUID nonExistentId = UUID.randomUUID();
+
+            UpdateConsentRequestDTO updateRequest = UpdateConsentRequestDTO.builder()
+                    .cpf("77858165062")
+                    .additionalInfo("Updated info")
+                    .build();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<UpdateConsentRequestDTO> entity = new HttpEntity<>(updateRequest, headers);
+
+            ResponseEntity<ErrorResponse> response = restTemplate.exchange(
+                    baseUrl + "/" + nonExistentId, HttpMethod.PUT, entity, ErrorResponse.class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        }
+
+        @Test
+        @DisplayName("Should return 400 when updating with invalid data")
+        void shouldReturn400WhenUpdatingWithInvalidData() {
+            UUID consentId = createTestConsent("43278152093");
+
+            UpdateConsentRequestDTO updateRequest = UpdateConsentRequestDTO.builder()
+                    .cpf("77858165062")
+                    .additionalInfo("A".repeat(51))
+                    .build();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<UpdateConsentRequestDTO> entity = new HttpEntity<>(updateRequest, headers);
+
+            ResponseEntity<ErrorResponse> response = restTemplate.exchange(
+                    baseUrl + "/" + consentId, HttpMethod.PUT, entity, ErrorResponse.class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -2,10 +2,12 @@ package com.davi.challenge.consents.infraestructure.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDateTime;
 
+@Builder
 public record UpdateConsentRequestDTO(
         @NotBlank
         @CPF
