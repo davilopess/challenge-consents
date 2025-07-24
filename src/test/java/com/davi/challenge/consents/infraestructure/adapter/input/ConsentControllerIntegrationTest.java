@@ -5,6 +5,7 @@ import com.davi.challenge.consents.infraestructure.dto.request.CreateConsentRequ
 import com.davi.challenge.consents.infraestructure.dto.request.UpdateConsentRequestDTO;
 import com.davi.challenge.consents.infraestructure.dto.response.ConsentResponseDTO;
 import com.davi.challenge.consents.infraestructure.exception.model.ErrorResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
@@ -196,7 +197,7 @@ class ConsentControllerIntegrationTest {
                 assertThat(jsonNode.has("pageable")).isTrue();
                 assertThat(jsonNode.has("totalElements")).isTrue();
                 assertThat(jsonNode.get("content").isArray()).isTrue();
-            } catch (Exception e) {
+            } catch (JsonProcessingException e) {
                 fail("Failed to parse JSON response", e);
             }
         }
@@ -288,7 +289,7 @@ class ConsentControllerIntegrationTest {
 
             ResponseEntity<ConsentResponseDTO> getResponse = restTemplate.getForEntity(
                     baseUrl + "/" + consentId, ConsentResponseDTO.class);
-            
+
             assertThat(getResponse.getBody().status()).isEqualTo(ConsentStatusEnum.REVOKED);
         }
 
