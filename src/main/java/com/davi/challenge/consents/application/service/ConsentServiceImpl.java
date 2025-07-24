@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-class ConsentServiceImpl implements ConsentService {
+public class ConsentServiceImpl implements ConsentService {
     private final ConsentRepository consentRepository;
     private final ConsentMapper consentMapper;
     private final AdditionalInfoExternalClient additionalInfoExternalClient;

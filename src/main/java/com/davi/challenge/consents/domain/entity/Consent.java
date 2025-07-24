@@ -1,12 +1,18 @@
 package com.davi.challenge.consents.domain.entity;
 
 import com.davi.challenge.consents.domain.enums.ConsentStatusEnum;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Consent {
 
     private UUID id;
