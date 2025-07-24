@@ -218,7 +218,7 @@ class ConsentAuditDomainServiceTest {
             UUID consentId = UUID.randomUUID();
             Consent consent = new Consent();
             consent.setId(consentId);
-            consent.setCpf("999.888.777-66");
+            consent.setCpf("99988877766");
             consent.setStatus(ConsentStatusEnum.ACTIVE);
             consent.setCreationDateTime(LocalDateTime.now().minusHours(2));
             consent.setExpirationDateTime(LocalDateTime.now().plusDays(60));

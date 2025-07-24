@@ -84,8 +84,8 @@ public class ConsentController {
                     content = @Content(schema = @Schema()))
     })
     @GetMapping
-    public ResponseEntity<Page<ConsentResponseDTO>> getAllConsents(@RequestParam(defaultValue = "0") int page,
-                                                                   @RequestParam(defaultValue = "5") int size){
+    public ResponseEntity<Page<ConsentResponseDTO>> getAllConsents(@RequestParam(defaultValue = "0") Integer page,
+                                                                   @RequestParam(defaultValue = "5") Integer size){
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(consentService.getAllConsents(pageable));
     }
